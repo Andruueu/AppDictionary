@@ -36,6 +36,7 @@ const API_SOURCE_BASE_URL = `https://api.dictionaryapi.dev/api/v2`;
 
 function handleResponse(data) {
   if (!Array.isArray(data) || !data.length) {
+    showFeedback("The word was not found. 😢", "error");
     return;
   }
 
@@ -61,6 +62,8 @@ function handleResponse(data) {
 
   const card = drawMarkUp(word, grouped);
   wordList.appendChild(card);
+
+  // showFeedback(`Cuvântul "${word}" a fost adăugat cu succes! 🎉`, "success");
 }
 
 const doFetchData = (searchItem = "hello", language = "en") => {
@@ -79,6 +82,7 @@ const doFetchData = (searchItem = "hello", language = "en") => {
 document.getElementById("addWordBtn").addEventListener("click", () => {
   const input = document.getElementById("wordInput").value.trim();
   if (!input) {
+    showFeedback("Please enter a word!", "error");
     return;
   }
 
@@ -96,4 +100,24 @@ function getEmojiForPart(part) {
     default:
       return "📝";
   }
+}
+
+function showFeedback(message, type = "info") {
+  const existing = document.getElementById("feedbackMsg");
+  if (existing) existing.remove();
+
+  const msg = document.createElement("div");
+  msg.id = "feedbackMsg";
+  msg.className = `mb-4 p-3 rounded text-white ${
+    type === "error"
+      ? "bg-red-500"
+      : type === "success"
+      ? "bg-green-500"
+      : "bg-blue-500"
+  }`;
+
+  msg.textContent = message;
+
+  const container = document.querySelector("#wordList");
+  container.parentNode.insertBefore(msg, container);
 }
