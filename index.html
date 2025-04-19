@@ -34,52 +34,67 @@
 
     <link rel="stylesheet" href="./assets/style/main.css" />
   </head>
-  <body class="bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 min-h-screen flex flex-col">
-
+  <body
+    class="bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 min-h-screen flex flex-col"
+  >
     <!-- Header -->
-    <header class="bg-primary text-white py-6 shadow-md">
+    <header class="bg-primary text-white py-4 shadow-md">
       <h1 class="text-4xl font-bold text-center">📖 App Dictionary</h1>
-      <p class="text-center text-indigo-200">Învață și salvează cuvinte cool 💡</p>
+      <p class="text-center text-indigo-200 pt-2">
+        Learn and save cool words 💡
+      </p>
     </header>
-  
+
     <!-- Layout -->
     <div class="flex flex-1 flex-col lg:flex-row">
-  
       <!-- Sidebar -->
       <aside class="bg-white w-full lg:w-64 p-6 border-r shadow-md">
-        <h2 class="text-2xl font-semibold text-primary mb-4">🔧 Setări</h2>
-        <button id="filterBtn" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition mb-3">
-          Cuvinte favorite
+        <h2 class="text-2xl font-semibold text-primary mb-4">🔧 Settings</h2>
+        <button
+          id="filterBtn"
+          class="w-full bg-primary text-white py-2 rounded-lg hover:bg-indigo-700 transition mb-3"
+        >
+          Favorite Words
         </button>
-        <button id="clearBtn" class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300">
-          Șterge tot
+        <button
+          id="clearBtn"
+          class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300"
+        >
+          Delete All
         </button>
       </aside>
-  
+
       <!-- Main Content -->
       <main class="flex-1 p-6 bg-bg">
         <div class="max-w-3xl mx-auto">
-  
           <!-- Input -->
           <div class="flex flex-col md:flex-row gap-4 mb-6">
-            <input id="wordInput" type="text" placeholder="Scrie un cuvânt..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" />
-            <button id="addWordBtn" class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-pink-500 transition">
-              ➕ Adaugă
+            <input
+              id="wordInput"
+              type="text"
+              placeholder="Search for a word..."
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+            />
+            <button
+              id="addWordBtn"
+              class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-pink-500 transition"
+            >
+              Search
             </button>
           </div>
-  
+
           <!-- Word List -->
-          <div id="wordList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div id="wordList" class="">
             <!-- Aici apar cardurile generate -->
           </div>
-  
         </div>
       </main>
     </div>
-  
+
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center py-4">
-      <p>✨ Creat de Andra & Alex. ✨</p>
+      <p>✨ Created by Andra & Alex. ✨</p>
+      >>>>>>> feature-draw_descriptions
     </footer>
 
     <script src="./assets/js/script.js"></script>
