@@ -120,4 +120,65 @@ function showFeedback(message, type = "info") {
 
   const container = document.querySelector("#wordList");
   container.parentNode.insertBefore(msg, container);
+  setTimeout(() => {
+    msg.remove();
+  }, 2000);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  drawMyListOfWords();
+});
+
+function addToFavoriteWords(word) {
+  const favoriteList = JSON.parse(localStorage.getItem("favoriteList")) || [];
+
+  if (!favoriteList.includes(word)) {
+    favoriteList.push(word);
+    localStorage.setItem("favoriteList", JSON.stringify(favoriteList));
+    showFeedback("✅ Added to Favorites!");
+
+    drawMyListOfWords();
+  } else {
+    showFeedback("⚠️ Already in Favorites!");
+  }
+}
+
+function drawMyListOfWords() {
+  const favorites = JSON.parse(localStorage.getItem("favoriteList")) || [];
+  let html = "";
+
+  favorites.forEach((word) => {
+    html += `<button>✅ ${word}</button>`;
+  });
+
+  document.getElementById("favoriteList").innerHTML = html;
+}
+
+document.getElementById("addFavoriteBtn").addEventListener("click", () => {
+  const word = document.getElementById("wordInput").value.trim();
+
+  if (word !== "") {
+    addToFavoriteWords(word);
+    document.getElementById("wordInput").value = "";
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const clearBtn = document.getElementById("clearBtn");
+
+  function showEmptyMessage() {
+    favoriteList.innerHTML = "";
+    const emptyMsg = document.createElement("li");
+    emptyMsg.textContent = "No favorite words yet...";
+    emptyMsg.className = "text-gray-500 italic";
+    favoriteList.appendChild(emptyMsg);
+  }
+
+  clearBtn.addEventListener("click", () => {
+    if (confirm("Are you sure you want to delete all words?")) {
+      localStorage.removeItem("favoriteList", JSON.stringify([]));
+      showFeedback("⚠️ Words deleted!");
+      showEmptyMessage();
+    }
+  });
+});
