@@ -148,7 +148,7 @@ function drawMyListOfWords() {
   let html = "";
 
   favorites.forEach((word) => {
-    html += `<button>✅ ${word}</button>`;
+    html += `<li><button>✅ ${word}</button></li>`;
   });
 
   document.getElementById("favoriteList").innerHTML = html;
