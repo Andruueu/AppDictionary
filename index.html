@@ -3,19 +3,103 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>App Dictionary - Kickoff</title>
+    <title>App Dictionary</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7"
       crossorigin="anonymous"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["Poppins", "sans-serif"],
+            },
+            colors: {
+              primary: "#4f46e5",
+              accent: "#f472b6",
+              bg: "#fdf4ff",
+            },
+          },
+        },
+      };
+    </script>
 
     <link rel="stylesheet" href="./assets/style/main.css" />
   </head>
-  <body>
-    <h1 class="text-primary">Hello World, I'm the Dictionary App!</h1>
-    <img src="./assets/images/placeholder.svg" alt="Placeholder image/svg" />
+  <body
+    class="bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 min-h-screen flex flex-col"
+  >
+    <!-- Header -->
+    <header class="bg-primary text-white py-4 shadow-md">
+      <h1 class="text-4xl font-bold text-center">📖 App Dictionary</h1>
+      <p class="text-center text-indigo-200 pt-2">
+        Learn and save cool words 💡
+      </p>
+    </header>
+
+    <!-- Layout -->
+    <div class="flex flex-1 flex-col lg:flex-row">
+      <!-- Sidebar -->
+      <aside class="bg-white w-full lg:w-64 p-6 border-r shadow-md">
+        <h2 class="text-2xl font-semibold text-primary mb-4">🔧 Settings</h2>
+        <div class="flex flex-col space-y-4 max-w-md mx-auto mt-8">
+          <h2 class="text-xl text-blue-500">Favorite Words List</h2>
+          <ul id="favoriteList"></ul>
+          <button
+            id="clearBtn"
+            class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300"
+          >
+            Delete All
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6 bg-bg">
+        <div class="max-w-3xl mx-auto">
+          <!-- Input -->
+          <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <input
+              id="wordInput"
+              type="text"
+              placeholder="Search for a word..."
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+            />
+            <button
+              id="addWordBtn"
+              class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-pink-500 transition"
+            >
+              Search
+            </button>
+            <button
+              id="addFavoriteBtn"
+              class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-pink-500 transition"
+            >
+              Add to Favorites
+            </button>
+          </div>
+
+          <!-- Word List -->
+          <div id="wordList" class="" onclick="clearBtn()">
+            <!-- Aici apar cardurile generate -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4">
+      <p>✨ Created by Andra & Alex. ✨</p>
+      >>>>>>> feature-draw_descriptions
+    </footer>
 
     <script src="./assets/js/script.js"></script>
 
