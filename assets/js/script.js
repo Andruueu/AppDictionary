@@ -284,4 +284,3 @@ document.addEventListener("DOMContentLoaded", () => {
     confirmModal.classList.add("hidden");
   });
 });
-
