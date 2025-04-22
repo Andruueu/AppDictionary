@@ -1,11 +1,45 @@
-console.log("JS works!");
+const API_SOURCE_BASE_URL = `https://api.dictionaryapi.dev/api/v2`;
+
 function drawMarkUp(word, groupedDefinitions) {
   const wrapper = document.createElement("div");
-  wrapper.className = "bg-white shadow-md p-4 rounded-lg mb-4";
+  wrapper.className =
+    "bg-white shadow-md p-4 rounded-lg mb-4 relative word-card";
+  wrapper.setAttribute("data-word", word);
+
+  const favorites = JSON.parse(localStorage.getItem("favoriteList")) || [];
+
+  const favoriteBtn = document.createElement("button");
+  updateFavoriteButtonState(word, favoriteBtn);
+  favoriteBtn.className =
+    "absolute top-2 right-2 text-xl hover:scale-110 transition-transform";
+
+  favoriteBtn.addEventListener("click", () => {
+    let currentFavorites =
+      JSON.parse(localStorage.getItem("favoriteList")) || [];
+
+    if (!currentFavorites.includes(word)) {
+      currentFavorites.push(word);
+      localStorage.setItem("favoriteList", JSON.stringify(currentFavorites));
+      showFeedback("✅ Added to Favorites!", "success");
+    } else {
+      currentFavorites = currentFavorites.filter((w) => w !== word);
+      localStorage.setItem("favoriteList", JSON.stringify(currentFavorites));
+      showFeedback("❌ Removed from Favorites!", "error");
+    }
+
+    const updatedFavorites =
+      JSON.parse(localStorage.getItem("favoriteList")) || [];
+    updateFavoriteButtonState(word, favoriteBtn);
+
+    drawMyListOfWords();
+  });
+
+  wrapper.appendChild(favoriteBtn);
 
   const title = document.createElement("h3");
   title.textContent = word;
   title.className = "text-2xl font-bold text-blue-700 mb-4";
+  wrapper.appendChild(title);
 
   for (const part in groupedDefinitions) {
     const section = document.createElement("div");
@@ -32,8 +66,6 @@ function drawMarkUp(word, groupedDefinitions) {
   return wrapper;
 }
 
-const API_SOURCE_BASE_URL = `https://api.dictionaryapi.dev/api/v2`;
-
 function handleResponse(data) {
   if (!Array.isArray(data) || !data.length) {
     showFeedback("The word was not found. 😢", "error");
@@ -41,12 +73,11 @@ function handleResponse(data) {
   }
 
   const wordList = document.getElementById("wordList");
-  wordList.innerHTML = ""; // Clear old results
+  wordList.innerHTML = "";
 
   const word = data[0].word;
   const meanings = data[0].meanings;
 
-  // Group definitions by part of speech
   const grouped = {};
 
   meanings.forEach((meaning) => {
@@ -62,8 +93,6 @@ function handleResponse(data) {
 
   const card = drawMarkUp(word, grouped);
   wordList.appendChild(card);
-
-  // showFeedback(`Cuvântul "${word}" a fost adăugat cu succes! 🎉`, "success");
 }
 
 const doFetchData = (searchItem = "hello", language = "en") => {
@@ -82,11 +111,12 @@ const doFetchData = (searchItem = "hello", language = "en") => {
 document.getElementById("addWordBtn").addEventListener("click", () => {
   const input = document.getElementById("wordInput").value.trim();
   if (!input) {
-    showFeedback("Please enter a word!", "error");
+    showFeedback("Please enter a word!", "warning");
     return;
   }
 
   doFetchData(input.toLowerCase());
+  document.getElementById("wordInput").value = "";
 });
 
 function getEmojiForPart(part) {
@@ -108,18 +138,23 @@ function showFeedback(message, type = "info") {
 
   const msg = document.createElement("div");
   msg.id = "feedbackMsg";
-  msg.className = `mb-4 p-3 rounded text-white ${
-    type === "error"
-      ? "bg-red-500"
-      : type === "success"
-      ? "bg-green-500"
-      : "bg-blue-500"
-  }`;
+  msg.className = `fixed top-6 right-4 p-3 rounded text-white 
+    ${
+      type === "error"
+        ? "bg-red-500"
+        : type === "success"
+        ? "bg-green-500"
+        : type === "warning"
+        ? "bg-yellow-500"
+        : "bg-blue-500"
+    } 
+    shadow-lg transition-transform transform scale-100`;
 
   msg.textContent = message;
 
-  const container = document.querySelector("#wordList");
-  container.parentNode.insertBefore(msg, container);
+  const container = document.body;
+  container.appendChild(msg);
+
   setTimeout(() => {
     msg.remove();
   }, 2000);
@@ -132,53 +167,120 @@ document.addEventListener("DOMContentLoaded", () => {
 function addToFavoriteWords(word) {
   const favoriteList = JSON.parse(localStorage.getItem("favoriteList")) || [];
 
-  if (!favoriteList.includes(word)) {
-    favoriteList.push(word);
-    localStorage.setItem("favoriteList", JSON.stringify(favoriteList));
-    showFeedback("✅ Added to Favorites!");
+  favoriteList.push(word);
+  localStorage.setItem("favoriteList", JSON.stringify(favoriteList));
+  showFeedback("✅ Added to Favorites!", "success");
 
-    drawMyListOfWords();
-  } else {
-    showFeedback("⚠️ Already in Favorites!");
-  }
+  drawMyListOfWords();
+}
+
+function updateFavoriteButtonState(word, favoriteBtn) {
+  const favorites = JSON.parse(localStorage.getItem("favoriteList")) || [];
+  const isFavorite = favorites.includes(word);
+
+  favoriteBtn.textContent = isFavorite ? "📖" : "📘";
+  favoriteBtn.title = isFavorite ? "In Favorites" : "Add to Favorites";
 }
 
 function drawMyListOfWords() {
+  const favoriteListEl = document.getElementById("favoriteListContainer");
   const favorites = JSON.parse(localStorage.getItem("favoriteList")) || [];
-  let html = "";
+
+  if (favorites.length === 0) {
+    favoriteListEl.innerHTML = `
+      <div class="text-gray-500 italic text-center">
+        No favorite words yet...
+      </div>`;
+    return;
+  }
+
+  favoriteListEl.innerHTML = "";
 
   favorites.forEach((word) => {
-    html += `<li><button onclick="doFetchData('${word}')">✅ ${word}</button></li>`;
+    const card = document.createElement("div");
+    card.className =
+      "bg-white shadow-md rounded-lg p-3 flex justify-between items-center space-x-3 transition-transform hover:scale-105 hover:shadow-lg cursor-pointer w-55 max-w-xs h-20";
+
+    const icon = document.createElement("span");
+    icon.textContent = "📚";
+    icon.className = "text-xl";
+
+    const wordText = document.createElement("span");
+    wordText.textContent = word;
+    wordText.className = "text-sm font-semibold text-blue-700 flex-1 truncate";
+
+    const btnRemove = document.createElement("button");
+    btnRemove.className = "text-gray-500 hover:text-red-600 transition";
+    btnRemove.innerHTML = "🗑️";
+    btnRemove.title = "Remove from Favorites";
+
+    btnRemove.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      const updatedFavorites = favorites.filter((item) => item !== word);
+      localStorage.setItem("favoriteList", JSON.stringify(updatedFavorites));
+      showFeedback("❌ Removed from Favorites!", "error");
+
+      drawMyListOfWords();
+
+      const mainCard = document.querySelector(
+        `.word-card[data-word="${word}"]`
+      );
+      if (mainCard) {
+        const mainCardBtn = mainCard.querySelector("button");
+        updateFavoriteButtonState(word, mainCardBtn);
+      }
+    });
+
+    card.addEventListener("click", () => {
+      doFetchData(word);
+      document.getElementById("wordInput").value = "";
+    });
+
+    card.appendChild(icon);
+    card.appendChild(wordText);
+    card.appendChild(btnRemove);
+
+    favoriteListEl.appendChild(card);
   });
-
-  document.getElementById("favoriteList").innerHTML = html;
 }
-
-document.getElementById("addFavoriteBtn").addEventListener("click", () => {
-  const word = document.getElementById("wordInput").value.trim();
-
-  if (word !== "") {
-    addToFavoriteWords(word);
-    document.getElementById("wordInput").value = "";
-  }
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   const clearBtn = document.getElementById("clearBtn");
-
-  function showEmptyMessage() {
-    favoriteList.innerHTML = "";
-    const emptyMsg = document.createElement("li");
-    emptyMsg.textContent = "No favorite words yet...";
-    emptyMsg.className = "text-gray-500 italic";
-    favoriteList.appendChild(emptyMsg);
-  }
+  const confirmModal = document.getElementById("confirmModal");
+  const confirmYesBtn = document.getElementById("confirmYesBtn");
+  const confirmCancelBtn = document.getElementById("confirmCancelBtn");
 
   clearBtn.addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete all words?")) {
-      localStorage.removeItem("favoriteList", JSON.stringify([]));
-      showFeedback("⚠️ Words deleted!");
-      showEmptyMessage();
+    const favorites = JSON.parse(localStorage.getItem("favoriteList")) || [];
+
+    if (favorites.length === 0) {
+      showFeedback(
+        "Please add at least one word to favorites before deleting.",
+        "warning"
+      );
+    } else {
+      confirmModal.classList.remove("hidden");
     }
+  });
+
+  confirmCancelBtn.addEventListener("click", () => {
+    confirmModal.classList.add("hidden");
+  });
+
+  confirmYesBtn.addEventListener("click", () => {
+    localStorage.removeItem("favoriteList");
+    showFeedback("⚠️ All words deleted from favorites!", "warning");
+
+    drawMyListOfWords();
+
+    const allCards = document.querySelectorAll(".word-card");
+    allCards.forEach((card) => {
+      const word = card.getAttribute("data-word");
+      const favoriteBtn = card.querySelector("button");
+      updateFavoriteButtonState(word, favoriteBtn);
+    });
+
+    confirmModal.classList.add("hidden");
   });
 });

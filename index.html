@@ -48,14 +48,15 @@
     <!-- Layout -->
     <div class="flex flex-1 flex-col lg:flex-row">
       <!-- Sidebar -->
-      <aside class="bg-white w-full lg:w-64 p-6 border-r shadow-md">
-        <h2 class="text-2xl font-semibold text-primary mb-4">🔧 Settings</h2>
+      <aside class="bg-white w-full lg:w-72 p-6 border-r shadow-md">
+        <h2 class="text-xl font-semibold text-primary mb-4 pt-3 pb-5">
+          🗂️ Favorite Words List
+        </h2>
         <div class="flex flex-col space-y-4 max-w-md mx-auto mt-8">
-          <h2 class="text-xl text-blue-500">Favorite Words List</h2>
-          <ul id="favoriteList"></ul>
+          <div id="favoriteListContainer" class="space-y-4 pb-5"></div>
           <button
             id="clearBtn"
-            class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300"
+            class="w-full bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-blue-400 hover:text-blue-900"
           >
             Delete All
           </button>
@@ -79,12 +80,6 @@
             >
               Search
             </button>
-            <button
-              id="addFavoriteBtn"
-              class="bg-accent text-white px-6 py-2 rounded-lg hover:bg-pink-500 transition"
-            >
-              Add to Favorites
-            </button>
           </div>
 
           <!-- Word List -->
@@ -93,6 +88,34 @@
           </div>
         </div>
       </main>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div
+      id="confirmModal"
+      class="fixed inset-0 backdrop-blur-sm bg-white/10 flex items-center justify-center hidden z-50"
+    >
+      <div
+        class="bg-white rounded-xl shadow-lg p-6 w-full max-w-sm text-center space-y-4"
+      >
+        <p class="text-lg font-semibold text-gray-800">
+          Are you sure you want to delete all words?
+        </p>
+        <div class="flex justify-center gap-4">
+          <button
+            id="confirmYesBtn"
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Yes, delete
+          </button>
+          <button
+            id="confirmCancelBtn"
+            class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
